@@ -20,6 +20,17 @@ It adds AI-generated voiceovers to NPC dialog in **Baldur's Gate II: Enhanced Ed
 
 The mod itself is the *output* of a pipeline — the actual generation, review, and packaging work was done using **VVE Builder** (see below), not by hand-recording or hand-assigning thousands of lines one at a time.
 
+## Picking what to install
+
+When you run the installer, WeiDU asks which parts of the voiceover pack you want. There are three components — here's what each one actually means for what you'll hear in-game:
+
+1. **Add Core/Essential NPC voiceovers (Mandatory!)** — main characters, companions, and every other NPC with a substantial amount of dialogue. This one is not optional!
+2. **Add Common NPC voiceovers** — the shopkeepers, bartenders, innkeepers, temple priests, and generic guards/soldiers/townsfolk you'll walk past and talk to again and again over a full playthrough. If you'd rather not hear the same handful of AI-voiced lines repeated every time you sell some loot or ask a guard for directions, leave this one unchecked — those NPCs will just keep using the game's original silent (text-only) dialog.
+3. **Add Minor NPC voiceovers** — everyone left over: NPCs with only a handful of generated lines that didn't fit neatly into either group above. Fully optional, and safe to skip if you'd rather keep the install lighter or the voice cast a bit more curated.
+
+**Not sure what to pick?** Check all three for the fullest, most consistently-voiced experience. But don't think of the mandatory Core/Essential component as just "your party and a few big names" — it already covers the large majority of every voiced line in the mod. Common and Minor just add back the repetitive vendor/guard/tavern chatter and the quietest, few-line background characters on top of that, so skipping them still leaves almost everyone else talking.
+
+
 ## Built with VVE Builder
 
 This mod was created using **[VVE Builder](https://github.com/BelegCufea/VVE_Builder)**, an open-source automation pipeline for building AI voiceover mods for Infinity Engine games with WeiDU and [VoiceBox](https://voicebox.sh/).
