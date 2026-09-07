@@ -66,7 +66,7 @@ No need to wait on anyone else — if you can hear a bad line, you can fix it yo
 1. Click the Windows **Start** button, type `PowerShell`, and open it.
 2. Type the following and press Enter:
    ```powershell
-   winget install Gyan.Dev.FFmpeg
+   winget install Gyan.FFmpeg
    ```
 3. Let it finish, then **restart your PC** once (this makes sure Windows picks up the new PATH entry). If `winget` isn't available on your system, search "ffmpeg windows install" for a manual install guide — you just need `ffmpeg` reachable from the command line.
 
