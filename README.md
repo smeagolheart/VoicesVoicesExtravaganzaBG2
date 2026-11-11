@@ -213,3 +213,18 @@ Full license text: [Creative Commons BY-NC-SA 4.0](https://creativecommons.org/l
 ## Issues & Feedback
 
 Found a bad line, a missing voice, or a bug in the installer? Open an issue on the mod's GitHub repository. If you want to help improve or regenerate specific voices yourself, grab [VVE Builder](https://github.com/BelegCufea/VVE_Builder) and dig in — it's built to be forked and customized.
+
+## Proposed: safe-attach installer (`VVEBG2/setup-VVEBG2.tp2`, v1.02)
+
+The shipped installer writes every mapped sound unconditionally, so it replaces any sound already on a line
+(official audio, the vve mods, another voiceover pack) and copies every WAV into `override` whether or not
+the line was patched. This variant:
+
+- attaches a voiceover **only if the line currently has no sound** (empty, or a `C0BLANK`-style placeholder);
+- lines that already have a sound are left alone and listed in the WeiDU debug log, with a count at the end;
+- copies a WAV to `override` **only for lines it actually patched**, so no orphan files are left behind;
+- keeps the line's current text (`ACTION_GET_STRREF` -> `STRING_SET_EVALUATE`), so text fixes from other mods survive.
+
+It reuses the existing `mapping_*.txt` files and `WAV` folder unchanged. `TRA/english/setup.tra` gains one message (`@12`).
+It does not check that the line's text still matches the text the audio was generated from; that needs the generator
+to ship the source text per line (as VVE Builder's text-matching installer does).

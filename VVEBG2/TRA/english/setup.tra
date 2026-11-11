@@ -1,0 +1,12 @@
+@1 = ~Add Core/Essential NPC voiceovers (Mandatory!)~
+@2 = ~[VO Patcher] Applying Core/Essential NPC voiceovers...~
+@3 = ~[VO Patcher] Successfully patched %patched% strref(s) with voiceover (Core/Essential).~
+@4 = ~Add Common NPC voiceovers~
+@5 = ~[VO Patcher] Applying Common NPC voiceovers...~
+@6 = ~[VO Patcher] Successfully patched %patched% strref(s) with voiceover (Common).~
+@7 = ~[VO Patcher] Preparing voiceover installation...~
+@8 = ~Add Minor NPC voiceovers~
+@9 = ~[VO Patcher] Applying Minor NPC voiceovers...~
+@10 = ~[VO Patcher] Successfully patched %patched% strref(s) with voiceover (Minor).~
+@11 = ~Only supports BG2EE and EET~
+@12 = ~[VO Patcher] Left %skipped_sound% line(s) alone because they already have a sound.~

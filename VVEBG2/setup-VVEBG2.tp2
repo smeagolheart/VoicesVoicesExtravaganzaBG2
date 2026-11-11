@@ -1,0 +1,101 @@
+/*
+ * IE Voiceover Patcher
+ * Attaches WAV voiceovers to existing dialog.tlk strrefs.
+ *
+ * Safe-attach variant: a voiceover is attached to a line ONLY when the line currently has no
+ * sound (empty, or a silent placeholder such as C0BLANK). Lines that already carry a sound -
+ * official audio, the vve mods, another voiceover pack, or an earlier run of this mod - are
+ * left alone and are listed in the WeiDU debug log. The audio file is copied to override only
+ * for lines that are actually patched, so no orphan files are left behind.
+ * The current text of every line is read and written back unchanged, so fixes made to the
+ * text by other mods (Fixpack, Unfinished Business, ...) are preserved.
+ */
+
+BACKUP ~VVEBG2/backup~
+AUTHOR ~VVE_Builder~
+VERSION ~v1.02~
+
+// vo_attach expects map_file ("strref resref" per row). Sets: patched, skipped_sound.
+ALWAYS
+DEFINE_ACTION_MACRO vo_attach BEGIN
+  OUTER_SET patched = 0
+  OUTER_SET skipped_sound = 0
+  OUTER_SET skipped_range = 0
+  OUTER_SET tlk_total = NEXT_STRREF
+
+  COPY - ~%map_file%~ ~override~
+    READ_2DA_ENTRIES_NOW vo_map 2
+
+    FOR (row = 0; row < vo_map; row = row + 1) BEGIN
+      READ_2DA_ENTRY_FORMER vo_map row 0 strref
+      READ_2DA_ENTRY_FORMER vo_map row 1 resref
+
+      INNER_ACTION BEGIN
+        ACTION_IF (strref > 0 AND strref < tlk_total) BEGIN
+          ACTION_GET_STRREF_S strref snd
+          OUTER_SET snd_free = 0
+          ACTION_IF (~%snd%~ STRING_EQUAL ~~) BEGIN OUTER_SET snd_free = 1 END
+          ACTION_IF (~%snd%~ STRING_COMPARE_REGEXP ~.*[Bb][Ll][Aa][Nn][Kk].*~ = 0) BEGIN OUTER_SET snd_free = 1 END
+          ACTION_IF (~%snd%~ STRING_COMPARE_REGEXP ~.*[Ss][Ii][Ll][Ee][Nn].*~ = 0) BEGIN OUTER_SET snd_free = 1 END
+
+          ACTION_IF (snd_free = 1) BEGIN
+            ACTION_TRY
+              COPY ~VVEBG2/WAV/%resref%.wav~ ~override~
+            WITH DEFAULT
+              LOG ~[VO Patcher] could not copy %resref%.wav~
+            END
+            ACTION_IF FILE_EXISTS_IN_GAME ~%resref%.wav~ BEGIN
+              ACTION_GET_STRREF strref dialogstring
+              STRING_SET_EVALUATE strref ~%dialogstring%~ [%resref%]
+              OUTER_SET patched = patched + 1
+            END
+          END ELSE BEGIN
+            LOG ~[VO Patcher] kept existing sound %snd% on strref %strref% (not replaced by %resref%)~
+            OUTER_SET skipped_sound = skipped_sound + 1
+          END
+        END ELSE BEGIN
+          OUTER_SET skipped_range = skipped_range + 1
+        END
+      END
+    END
+  BUT_ONLY
+END
+END
+
+LANGUAGE ~English~
+         ~english~
+         ~VVEBG2/TRA/english/setup.tra~
+
+BEGIN @1
+  REQUIRE_PREDICATE GAME_IS ~bg2ee eet~ @11
+
+PRINT @7
+PRINT @2
+SILENT
+OUTER_TEXT_SPRINT map_file ~VVEBG2/mapping_core.txt~
+LAUNCH_ACTION_MACRO vo_attach
+VERBOSE
+PRINT @3
+PRINT @12
+
+BEGIN @4
+  REQUIRE_PREDICATE GAME_IS ~bg2ee eet~ @11
+
+PRINT @5
+SILENT
+OUTER_TEXT_SPRINT map_file ~VVEBG2/mapping_common.txt~
+LAUNCH_ACTION_MACRO vo_attach
+VERBOSE
+PRINT @6
+PRINT @12
+
+BEGIN @8
+  REQUIRE_PREDICATE GAME_IS ~bg2ee eet~ @11
+
+PRINT @9
+SILENT
+OUTER_TEXT_SPRINT map_file ~VVEBG2/mapping_minor.txt~
+LAUNCH_ACTION_MACRO vo_attach
+VERBOSE
+PRINT @10
+PRINT @12
